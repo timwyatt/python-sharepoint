@@ -172,7 +172,6 @@ class SharePointList(object):
                                   SP.rowLimit("100000"),
                                   SP.viewFields(view_fields),
                                   SP.queryOptions(query_options))
-
             response = self.opener.post_soap(LIST_WEBSERVICE, xml)
             for row in list(response[0][0][0]):
                 attrib = attribs[row.attrib['ows_ID']]
