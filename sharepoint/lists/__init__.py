@@ -119,6 +119,7 @@ class SharePointList(object):
         self._deleted_rows = set()
         self._settings, self._meta = settings, None
         self.id = self.meta['ID'].lower()
+        self.query = ''
 
     def __repr__(self):
         return "<SharePointList {0} '{1}'>".format(self.id, self.meta['Title'])
@@ -167,9 +168,11 @@ class SharePointList(object):
             #query_options = E.QueryOptions(E.ViewAttributes(Scope="Recursive"))
             query_options = E.QueryOptions(E.Folder(folder))
             xml = SP.GetListItems(SP.listName(self.id),
+                                  SP.query(self.query),
                                   SP.rowLimit("100000"),
                                   SP.viewFields(view_fields),
                                   SP.queryOptions(query_options))
+
             response = self.opener.post_soap(LIST_WEBSERVICE, xml)
             for row in list(response[0][0][0]):
                 attrib = attribs[row.attrib['ows_ID']]
