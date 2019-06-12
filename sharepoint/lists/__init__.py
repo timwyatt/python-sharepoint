@@ -120,6 +120,7 @@ class SharePointList(object):
         self._settings, self._meta = settings, None
         self.id = self.meta['ID'].lower()
         self.query = ''
+        self.viewName = ''
 
     def __repr__(self):
         return "<SharePointList {0} '{1}'>".format(self.id, self.meta['Title'])
@@ -168,6 +169,7 @@ class SharePointList(object):
             #query_options = E.QueryOptions(E.ViewAttributes(Scope="Recursive"))
             query_options = E.QueryOptions(E.Folder(folder))
             xml = SP.GetListItems(SP.listName(self.id),
+                                  SP.viewName(self.viewName),
                                   SP.query(self.query),
                                   SP.rowLimit("100000"),
                                   SP.viewFields(view_fields),
