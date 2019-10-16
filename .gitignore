@@ -3,6 +3,8 @@ dist
 MANIFEST
 .*.swp
 *.pyc
+*.zip
+.idea
 
 # For Eclipse
 .project
