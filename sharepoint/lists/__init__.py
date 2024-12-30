@@ -1,5 +1,7 @@
 import collections
 import re
+import os
+import random
 try:
     from urllib.parse import quote
     from urllib.request import HTTPError, Request
@@ -19,10 +21,15 @@ from sharepoint.exceptions import UpdateFailedError
 
 uuid_re = re.compile(r'^\{?([\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\}?$')
 
-try:
-    str = basestring
-except NameError:
-    pass
+if bytes != str: # python 3
+    unicode = str
+
+# try:
+#     str = basestring
+# except NameError:
+#     pass
+
+
 
 
 class SharePointLists(object):
@@ -315,6 +322,11 @@ class SharePointList(object):
 
         if len(batches) == 0:
             return
+
+        # fname = 'post_' + str(random.randint(0,1000)) + '.xml'
+        # fp = open(fname, 'wb')
+        # fp.write(etree.tostring(xml, pretty_print=True))
+        # fp.close()
 
         response = self.opener.post_soap(LIST_WEBSERVICE, xml,
                                          soapaction='http://schemas.microsoft.com/sharepoint/soap/UpdateListItems')
