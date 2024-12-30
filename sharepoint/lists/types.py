@@ -11,6 +11,9 @@ empty_values = ('', None)
 
 if bytes == str: # Py2
     str = unicode
+elif bytes != str: # python 3
+    unicode = str
+
 
 class FieldDescriptor(object):
     def __init__(self, field, immutable=False):
@@ -88,7 +91,7 @@ class Field(object):
                 # if we have [['']], then remove the last entry
                 if values and values[-1] and not values[-1][0]:
                     del values[-1]
-                return map(self._parse, values)
+                return list(map(self._parse, values))
             else:
                 return [self._parse(v) for v in values if v not in empty_values]
         elif self.group_multi:
@@ -102,14 +105,14 @@ class Field(object):
             return ''
 
         if self.group_multi is not None and self.multi:
-            value = map(self._unparse, value)
+            value = list(map(self._unparse, value))
             assert all(len(v) == self.group_multi for v in value)
             value = list(itertools.chain(*value))
         elif self.group_multi is not None:
             value = self._unparse(value)
             assert len(value) == self.group_multi
         elif self.multi:
-            value = map(self._unparse, value)
+            value = list(map(self._unparse, value))
 
         if self.group_multi is not None or self.multi:
             values = [subvalue.replace(';', ';;') for subvalue in value]
